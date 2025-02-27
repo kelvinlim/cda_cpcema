@@ -1,0 +1,495 @@
+GLOBAL:
+  version: 4.0
+  name: cpc_pain
+  title: cpc_pain
+  header:  
+     qualtrics cpc pain ema
+
+  # useful for testing on a single case
+  #cases_ignore: [ EMS011, EMS013, EMS022, all_cases ]
+  cases_ignore: [ ]
+  # delete directories
+  delete_directories: True
+
+  # name of various directories to create
+  directories:
+    # name of data directory
+    datadir: data
+    data_gfci_raw: data_gfci_raw
+    rawdatadir: data_raw
+    output: output_gfci
+
+PREP:
+  datafile: CPC+EMA+Survey_February+27,+2025_12.14_df.csv
+
+  variables:
+    # minimum number of raw rows
+    min_rows: 25
+
+  steps_global:
+
+    -
+      op: keep
+      arg:
+      # - StartDate
+      # - EndDate
+      # - Status
+      # - IPAddress
+      # - Progress
+      # - Duration (in seconds)
+      # - Finished
+      # - RecordedDate
+      # - ResponseId
+      # - RecipientLastName
+      # - RecipientFirstName
+      # - RecipientEmail
+      - ExternalReference
+      # - LocationLatitude
+      # - LocationLongitude
+      # - DistributionChannel
+      # - UserLanguage
+      # - Q_RecaptchaScore
+      # - Browser_info_Browser
+      # - Browser_info_Version
+      # - Browser_info_Operating System
+      # - Browser_info_Resolution
+      - Q01_Fatigue
+      - Q54
+      - Q55
+      - Q56
+      - Q57
+      - Q58
+      - Q59
+      - Q60
+      - Q61
+      - Q62
+      - Q63
+      - Q64
+      - Q65
+      - Q67
+      - Q66
+      - Q68
+      - Q69
+      # - TrailsAB-int
+      # - SymmetrySpan-int
+      - SpatialSpan3_perc_accuracy
+      - SpatialSpan4_perc_accuracy
+      - SpatialSpan5_perc_accuracy
+      - GridA_secs
+      # - GridA_secsinv
+      - GridB_secs
+      #- GridB_secsinv
+      # - SpatialSpan
+      # - TrailsAB
+
+    -
+      op: rename
+      arg:
+        StartDate: Start Date
+        EndDate: End Date
+        Status: Response Type
+        IPAddress: IP Address
+        Progress: Progress
+        Duration (in seconds): Duration (in seconds)
+        Finished: Finished
+        RecordedDate: Recorded Date
+        ResponseId: Response ID
+        RecipientLastName: Recipient Last Name
+        RecipientFirstName: Recipient First Name
+        RecipientEmail: Recipient Email
+        ExternalReference: id
+        LocationLatitude: Location Latitude
+        LocationLongitude: Location Longitude
+        DistributionChannel: Distribution Channel
+        UserLanguage: User Language
+        Q_RecaptchaScore: Q_RecaptchaScore
+        Browser_info_Browser: Click to write the question text - Browser
+        Browser_info_Version: Click to write the question text - Version
+        Browser_info_Operating System: Click to write the question text - Operating System
+        Browser_info_Resolution: Click to write the question text - Resolution
+        Q01_Fatigue: fatigue # Right now, I am having trouble starting things because I'm tired.
+        Q54: accomplish # How accomplished do you feel in your activities in the last 3 hours?
+        Q55: pain_interf # Right now, how much is pain interfering with your day to day activities?
+        Q56: pain_cope # Right now, I have the strategies to cope with my pain.
+        Q57: pain_worry # Right now, I worry all the time about whether the pain will end.
+        Q58: serious # Right now, I wonder whether something serious may happen.
+        Q59: pain_mind # Right now, I can't seem to keep my pain out of my mind.
+        Q60: pain_intens # Right now, how much pain are you in?
+        Q61: stressed # Right now, how stressed do you feel?
+        Q62: depressed # Right now, how down/depressed do you feel?
+        Q63: rested # Right now, how rested do you feel?
+        Q64: pain_strategy # Right now, of the strategies you have to cope with your pain, how helpful do you think they will be?
+        Q65: feel_support # Right now, I feel supported by those around me.
+        Q67: feel_direction # Right now, I feel my life is heading in a good direction.
+        Q66: feel_burden # Right now, I feel like a burden on others.
+        Q68: trust_provid # Right now, I have trust in my VA pain providers.
+        Q69: get_better # Right now, I think I will get better.
+        TrailsAB-int: Did anything interrupt you during the previous task?
+        SymmetrySpan-int: Did anything interrupt the previous task?
+        SpatialSpan: SpatialSpan
+        TrailsAB: TrailsAB
+
+
+    # - 
+    #   op: sort
+    #   arg:
+    #     - id
+    #     - datetime
+
+    -
+      op: save
+      arg: 
+        dir: data_gfci_raw
+        stub: _all.csv
+
+  # step for individual case
+  steps_case:
+
+    # recoredDate in qualtrics 2023-09-10T18:09:44.303Z
+    # Get the datetime stored for a case
+    # This is stored as a list which is used to match
+    # corresponding data in the stream.json.gz file.
+    # for redcap 2022-02-11 09:19:37
+    # if no dateformat is provided, dateutil.parser.parse is
+    # used to automatically do the conversion
+    # If no timezone is provided, UTC is assumed. This is good for
+    # Qualitrics which uses UTC for datetime fields.
+    # -
+    #   op: getdatetime
+    #   arg:
+    #     # name for datetime column in data
+    #     datetime: datetime
+    #     # timezone ema data, for redcap America/Chicago
+    #     # for qualtrics Etc/UTC
+    #     #timezone: America/Chicago
+    #     #dateformat: '%Y-%m-%dT%H:%M:%S.%fZ'
+    #     #dateformat: '%Y-%m-%dT%H:%M:%SZ'
+        
+    # # merge garmin data
+    # -
+    #   op: mergegarmin
+    #   arg:
+    #     # stub for the garmin stream file
+    #     # xxxxx_stream.json.gz
+    #     garmindir: WearableData
+    #     stub: _stream.json.gz
+    #     clean: True
+
+    -
+      op: drop
+      arg:
+        - id
+
+    # -
+    #   op: rename
+    #   arg:
+    #     PANASNEG: panasneg
+    #     PANASPOS: panaspos
+    #     POMSAH: pomsah  
+
+    -
+      op: save
+      arg: 
+        dir: data_raw
+        stub: _raw.csv
+
+    - 
+      op: missing_value
+      arg: drop        
+
+    -
+      op: add_lag
+      arg:
+        suffix: _
+
+    -
+      op: save
+      arg: 
+        dir: data_raw
+        stub: _lagged.csv
+    
+    -
+      op: standardize
+      arg:
+    
+    -
+      op: save
+      arg: 
+        dir: data
+        stub: .csv 
+        #min_rows: 25
+
+
+
+
+CAUSAL:
+
+  # rename xxx_out.txt to xxx.txt
+  renametxt: [ _out.txt, .txt]
+
+  # set the default jarfile path for causal_cmd
+  cmdpath: /home/limko/public/causal
+  # auto select causal path based on hostname
+  jarautopath:
+    # MSI agate node
+    "acn": /home/limko/public/causal
+    # macbook
+    "XJ75": /Users/kolim/bin
+    # VA
+    "resch4": /home/train/causal-bin
+    # WSL
+    "DESKTOP-7KIDSEU": /home/kolim/bin
+    # WSL asus duo
+    "asusduokolim": /home/kolim/Projects/causal-bin
+
+  causal-cmd:
+    alpha: 0.05
+    algorithm: gfci
+    dataset: 
+    data-type: continuous
+    delimiter: comma
+    json-graph: False
+    knowledge: prior.txt
+    out: output_gfci
+    penaltyDiscount: 1.0
+    prefix:
+    score: sem-bic-score
+    #skip-latest: True
+    test: fisher-z-test
+    #thread: 1
+    version: 1.12.0
+    #cmdpath: /home/limko/public/causal
+    cmdpath: /Users/kolim/bin
+    
+  causal-cmd_1.1.3:
+    alpha: 0.05
+    algorithm: gfci
+    dataset: 
+    data-type: continuous
+    delimiter: comma
+    json-graph: False
+    knowledge: prior.txt
+    out: output_gfci
+    penaltyDiscount: 1.0
+    prefix:
+    score: sem-bic
+    skip-latest: True
+    test: fisher-z-test
+    thread: 1
+    version: 1.1.3
+    cmdpath: /home/limko/public/causal
+
+  # standardize the columns
+  standardize_cols: true
+
+SEM:
+  plotting:
+    plot_all_edges: True   # default is False
+    fontname: Helvetica
+    label_edge_types: [-->, o-> ]
+    #label_edge_types: [-->, o-> , o-o ]
+    min_pvalue: 1
+    show_pvalue: True
+    label: True
+
+  # type of edges to include in model
+  include_model_edges: [ ['-->','~'], ['o->', '~'] ]
+
+
+GRAPHS:
+  # additional graphs
+  -
+    op: ancestors
+    arg: 
+      nodes: [pain_interf]
+      minrsq: 0.1
+      colors: 
+        pos: green
+        neg: red
+
+  -
+    op: save_plot
+    arg: 
+      stub: _ancest.png
+      dir: output
+
+  -
+    op: ancestors
+    arg: 
+      nodes: [pain_interf]
+      minrsq: 0.0
+      colors: 
+        pos: green
+        neg: red
+
+  -
+    op: save_plot
+    arg: 
+      stub: _fullancest.png
+      dir: output
+
+  # -
+  #   op: parentchild
+  #   arg: 
+  #     parent: [QN06_activity]
+  #     child: [QN01_intensity_NP]
+  #     colors: 
+  #       pos: green
+  #       neg: red
+
+  # -
+  #   op: save_plot
+  #   arg: 
+  #     stub: _activity.png
+  #     dir: output
+
+
+  # -
+  #   op: custom
+  #   arg:
+  #     cases: [EMS002] 
+  #     parent: [=GridB_secs_lag, 
+  #             =garm_sleep_lightSleepDurationinSeconds,
+  #             =QN05_fearful_move_NP_lag
+  #             ]
+  #     child: [QN01_intensity_NP]
+  #     colors: 
+  #       pos: green
+  #       neg: red
+
+  # -
+  #   op: save_plot
+  #   arg: 
+  #     stub: _custom.png
+  #     dir: output
+
+PATHS:
+
+  effectsize:
+    pain_interf: # the des
+      title: 'Causal Effect Sizes on pain interference'
+      grid: 
+        plot: True
+        titleSize: 20
+        labelsize: 10
+        gridlines: True
+        minrsq: 0.0
+        xrotate: 45
+        widthInches: 16.0
+        heightInches: 8.0
+        xLabelSize: 12
+        yLabelSize: 12
+        reorderCases: False
+        reorderCasesUseList: False
+        reorderColumns: False       
+      # src 
+      src:  [
+              fatigue,
+              fatigue_,
+              accomplish,
+              accomplish_,
+              #pain_interf,
+              pain_interf_,
+              pain_cope,
+              pain_cope_,
+              pain_worry,
+              pain_worry_,
+              serious,
+              serious_,
+              pain_mind,
+              pain_mind_,
+              pain_intens,
+              pain_intens_,
+              stressed,
+              stressed_,
+              depressed,
+              depressed_,
+              rested,
+              rested_,
+              pain_strategy,
+              pain_strategy_,
+              feel_support,
+              feel_support_,
+              feel_direction,
+              feel_direction_,
+              feel_burden,
+              feel_burden_,
+              trust_provid,
+              trust_provid_,
+              get_better,
+              get_better_,
+              SpatialSpan3_perc_accuracy,
+              SpatialSpan3_perc_accuracy_,
+              SpatialSpan4_perc_accuracy,
+              SpatialSpan4_perc_accuracy_,
+              SpatialSpan5_perc_accuracy,
+              SpatialSpan5_perc_accuracy_,
+              GridA_secs,
+              GridA_secs_,
+              GridB_secs,
+              GridB_secs_,
+            ]
+
+    pain_intens: # the des
+      title: 'Causal Effect Sizes on pain intensity'
+      grid: 
+        plot: True
+        titleSize: 20
+        labelsize: 10
+        gridlines: True
+        minrsq: 0.0
+        xrotate: 45
+        widthInches: 16.0
+        heightInches: 8.0
+        xLabelSize: 12
+        yLabelSize: 12
+        reorderCases: False
+        reorderCasesUseList: False
+        reorderColumns: False       
+      # src 
+      src:  [
+              fatigue,
+              fatigue_,
+              accomplish,
+              accomplish_,
+              pain_interf,
+              pain_interf_,
+              pain_cope,
+              pain_cope_,
+              pain_worry,
+              pain_worry_,
+              serious,
+              serious_,
+              pain_mind,
+              pain_mind_,
+              #pain_intens,
+              pain_intens_,
+              stressed,
+              stressed_,
+              depressed,
+              depressed_,
+              rested,
+              rested_,
+              pain_strategy,
+              pain_strategy_,
+              feel_support,
+              feel_support_,
+              feel_direction,
+              feel_direction_,
+              feel_burden,
+              feel_burden_,
+              trust_provid,
+              trust_provid_,
+              get_better,
+              get_better_,
+              SpatialSpan3_perc_accuracy,
+              SpatialSpan3_perc_accuracy_,
+              SpatialSpan4_perc_accuracy,
+              SpatialSpan4_perc_accuracy_,
+              SpatialSpan5_perc_accuracy,
+              SpatialSpan5_perc_accuracy_,
+              GridA_secs,
+              GridA_secs_,
+              GridB_secs,
+              GridB_secs_,
+            ]
