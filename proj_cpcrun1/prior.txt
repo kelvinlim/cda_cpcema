@@ -1,0 +1,9 @@
+/knowledge
+
+addtemporal
+1 fatigue_ accomplish_ pain_interf_ pain_cope_ pain_worry_ serious_ pain_mind_ pain_intens_ stressed_ depressed_ rested_ pain_strategy_ feel_support_ feel_direction_ feel_burden_ trust_provid_ get_better_ SpatialSpan3_perc_accuracy_ SpatialSpan4_perc_accuracy_ SpatialSpan5_perc_accuracy_ GridA_secs_ GridB_secs_
+2 fatigue accomplish pain_interf pain_cope pain_worry serious pain_mind pain_intens stressed depressed rested pain_strategy feel_support feel_direction feel_burden trust_provid get_better SpatialSpan3_perc_accuracy SpatialSpan4_perc_accuracy SpatialSpan5_perc_accuracy GridA_secs GridB_secs
+
+forbiddirect
+
+requiredirect
