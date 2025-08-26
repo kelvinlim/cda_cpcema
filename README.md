@@ -1,9 +1,15 @@
 # cda_cpcema
 
 ```
+# For linux
 # at VA
 source /home/train/Venv/cdatools2/bin/activate
 export PATH=~/Projects/cda_tools2:$PATH
+
+# For VA avd windows
+..\cda_tools2\.venv\Scripts\activate.ps1
+# to  run a cda_tools2 program
+python ..\cda_tools2\run_parse2.py --mdir .\proj_cpcrun1 --verbose
 
 ```
 
@@ -69,12 +75,18 @@ LNPIQualtrics uses the webfile to generate a study_descr.txt file that contains 
 # get the index for desired study
 ./LNPIQualtrics.py --config config_qualtrics_va.yaml
 
+Surveyindex: 20 Title: CPC EMA Survey
+
+
 # retrieve the most recent date using the webfile
 # to create the study_descr.txt file. This only has to 
 # be done once or if a survey is changed.
-./LNPIQualtrics.py --config config_qualtrics_va.yaml --index 15 --webfile CPC+EMA+Survey_February+27,+2025_12.14.csv
+./LNPIQualtrics.py --config config_qualtrics_va.yaml --index 20 --webfile CPC+EMA+Survey_February+27,+2025_12.14.csv
 
-# On subsequent downloads
-./LNPIQualtrics.py --config config_qualtrics_va.yaml --index 15
+# avd windows
+python .\LNPIQualtrics.py  --config .\config_qualtrics_va.yaml --index 20 --webfile '..\cda_cpcema\CPC+EMA+Survey_August+26,+2025_16.32.csv'
+
+# On subsequent downloads - doesn't work, variable names change!
+./LNPIQualtrics.py --config config_qualtrics_va.yaml --index 20
 
 ```

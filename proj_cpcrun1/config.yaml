@@ -20,7 +20,7 @@ GLOBAL:
     output: output_gfci
 
 PREP:
-  datafile: CPC+EMA+Survey_February+27,+2025_12.14_df.csv
+  datafile: CPC+EMA+Survey_August+26,+2025_16.32_df.csv
 
   variables:
     # minimum number of raw rows
@@ -219,10 +219,20 @@ PREP:
         stub: .csv 
         #min_rows: 25
 
-
-
-
 CAUSAL:
+
+  # set env and path
+  SETTINGS:
+    c30:
+      PATH:
+        # path for java
+        - "R:/DVBIC/CDA/jdk21.0.4_7/bin"
+        # path for graphviz 
+        - "R:/DVBIC/CDA/windows_10_msbuild_Release_graphviz-9.0.0-win32/Graphviz/bin"
+      ENV:
+        JAVA_HOME: "R:/DVBIC/CDA/jdk21.0.4_7"
+      # directory for causal_cmd jar files
+      CAUSAL_CMD_DIR: "R:/DVBIC/CDA"
 
   # rename xxx_out.txt to xxx.txt
   renametxt: [ _out.txt, .txt]
