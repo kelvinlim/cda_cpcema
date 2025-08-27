@@ -9,8 +9,24 @@ export PATH=~/Projects/cda_tools2:$PATH
 # For VA avd windows
 ..\cda_tools2\.venv\Scripts\activate.ps1
 # to  run a cda_tools2 program
-python ..\cda_tools2\run_parse2.py --mdir .\proj_cpcrun1 --verbose
 
+# parse the data
+python ..\cda_tools2\run_parse2.py --mdir .\proj_cpcrun1 --yaml config.yaml --verbose
+
+# run the causal discovery analysis
+python ..\cda_tools2\causal2.py --mdir .\proj_cpcrun1 --yaml config.yaml --verbose
+
+# create the label plots
+python ..\cda_tools2\plot_model.py --mdir .\proj_cpcrun1 --yaml config.yaml --stub "*.txt"
+
+# create the path distribution data
+python ..\cda_tools2\check_paths2.py --mdir .\proj_cpcrun1 --yaml config.yaml 
+
+# create the png distribution plots for pmax of 10 (up to 10 edges)
+python ..\cda_tools2\paths_plotdist2.py --mdir .\proj_cpcrun1 --yaml config.yaml
+
+# create the docx summary file including all the png files
+python ..\cda_tools2\create_docx_proj.py --mdir .\proj_cpcrun1 --yaml config.yaml --log logfile.txt --stub .png
 ```
 
 ## exporting data

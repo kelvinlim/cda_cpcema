@@ -376,16 +376,14 @@ GRAPHS:
 PATHS:
 
   effectsize:
-    -
-      des: pain_interf
-      title: 'Causal Effect Sizes on Pain Interference'
+    pain_interf: # the des
+      title: 'Causal Effect Sizes on pain interference'
       grid: 
         plot: True
-        plotname: pain_interf
         titleSize: 20
-        labelsize: 8
+        labelsize: 10
         gridlines: True
-        minrsq: 0.01
+        minrsq: 0.0
         xrotate: 45
         widthInches: 16.0
         heightInches: 8.0
@@ -396,46 +394,40 @@ PATHS:
         reorderColumns: False       
       # src 
       src:  [
-              #pain_interf,
-              pain_interf_,
-              pain_intens,
-              pain_intens_, 
-              pain_mind,
-              pain_mind_,
-              pain_cope,
-              pain_cope_,
-              pain_worry,
-              pain_worry_,
-              pain_strategy,
-              pain_strategy_,
-
               fatigue,
               fatigue_,
               accomplish,
               accomplish_,
+              #pain_interf,
+              pain_interf_,
+              pain_cope,
+              pain_cope_,
+              pain_worry,
+              pain_worry_,
               serious,
               serious_,
-
+              pain_mind,
+              pain_mind_,
+              pain_intens,
+              pain_intens_,
               stressed,
               stressed_,
               depressed,
               depressed_,
               rested,
               rested_,
-
+              pain_strategy,
+              pain_strategy_,
               feel_support,
               feel_support_,
               feel_direction,
               feel_direction_,
               feel_burden,
               feel_burden_,
-
               trust_provid,
               trust_provid_,
-
               get_better,
               get_better_,
-              # cognition
               SpatialSpan3_perc_accuracy,
               SpatialSpan3_perc_accuracy_,
               SpatialSpan4_perc_accuracy,
@@ -448,88 +440,14 @@ PATHS:
               GridB_secs_,
             ]
 
-    -
-      des: pain_interf
-      title: 'Causal Effect Sizes on Pain Interference'
+    pain_intens: # the des
+      title: 'Causal Effect Sizes on pain intensity'
       grid: 
         plot: True
-        plotname: pain_interf_reord_cases
-        titleSize: 20
-        labelsize: 8
-        gridlines: True
-        minrsq: 0.01
-        xrotate: 45
-        widthInches: 16.0
-        heightInches: 8.0
-        xLabelSize: 12
-        yLabelSize: 12
-        reorderCases: True
-        reorderCasesUseList: False
-        reorderColumns: False       
-      # src 
-      src:  [
-              #pain_interf,
-              pain_interf_,
-              pain_intens,
-              pain_intens_, 
-              pain_mind,
-              pain_mind_,
-              pain_cope,
-              pain_cope_,
-              pain_worry,
-              pain_worry_,
-              pain_strategy,
-              pain_strategy_,
-
-              fatigue,
-              fatigue_,
-              accomplish,
-              accomplish_,
-              serious,
-              serious_,
-
-              stressed,
-              stressed_,
-              depressed,
-              depressed_,
-              rested,
-              rested_,
-
-              feel_support,
-              feel_support_,
-              feel_direction,
-              feel_direction_,
-              feel_burden,
-              feel_burden_,
-
-              trust_provid,
-              trust_provid_,
-
-              get_better,
-              get_better_,
-              # cognition
-              SpatialSpan3_perc_accuracy,
-              SpatialSpan3_perc_accuracy_,
-              SpatialSpan4_perc_accuracy,
-              SpatialSpan4_perc_accuracy_,
-              SpatialSpan5_perc_accuracy,
-              SpatialSpan5_perc_accuracy_,
-              GridA_secs,
-              GridA_secs_,
-              GridB_secs,
-              GridB_secs_,
-            ]
-
-    -
-      des: pain_intens
-      title: 'Causal Effect Sizes on Pain Intensity'
-      grid: 
-        plot: True
-        plotname: pain_intens
         titleSize: 20
         labelsize: 10
         gridlines: True
-        minrsq: 0.01
+        minrsq: 0.0
         xrotate: 45
         widthInches: 16.0
         heightInches: 8.0
