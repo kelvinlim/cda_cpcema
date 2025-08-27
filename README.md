@@ -14,7 +14,7 @@ export PATH=~/Projects/cda_tools2:$PATH
 python ..\cda_tools2\run_parse2.py --mdir .\proj_cpcrun1 --yaml config.yaml --verbose
 
 # run the causal discovery analysis
-python ..\cda_tools2\causal2.py --mdir .\proj_cpcrun1 --yaml config.yaml --verbose
+python ..\cda_tools2\run_causal2.py --mdir .\proj_cpcrun1 --yaml config.yaml --verbose
 
 # create the label plots
 python ..\cda_tools2\plot_model.py --mdir .\proj_cpcrun1 --yaml config.yaml --stub "*.txt"
