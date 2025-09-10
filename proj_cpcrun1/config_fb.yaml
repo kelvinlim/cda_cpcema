@@ -420,7 +420,7 @@ PATHS:
         titleSize: 20
         labelsize: 10
         gridlines: True
-        minrsq: 0.0
+        minrsq: 0.01
         xrotate: 45
         widthInches: 20.0
         heightInches: 14.0
@@ -498,7 +498,7 @@ PATHS:
         titleSize: 20
         labelsize: 10
         gridlines: True
-        minrsq: 0.0
+        minrsq: 0.01
         xrotate: 45
         widthInches: 16.0
         heightInches: 8.0
