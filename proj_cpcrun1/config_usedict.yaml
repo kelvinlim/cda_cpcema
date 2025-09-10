@@ -385,8 +385,8 @@ PATHS:
         gridlines: True
         minrsq: 0.0
         xrotate: 45
-        widthInches: 16.0
-        heightInches: 8.0
+        widthInches: 20.0
+        heightInches: 14.0
         xLabelSize: 12
         yLabelSize: 12
         reorderCases: False
