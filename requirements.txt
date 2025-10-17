@@ -5,7 +5,7 @@ contourpy==1.3.3
 cycler==0.12.1
 debugpy==1.8.17
 decorator==5.2.1
-dgraph_flex==0.1.10
+dgraph_flex==0.1.11
 executing==2.2.1
 fastcda==0.1.18
 fonttools==4.60.1
