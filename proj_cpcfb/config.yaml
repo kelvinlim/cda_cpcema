@@ -3,7 +3,7 @@ GLOBAL:
   name: cpc_pain
   title: cpc_pain
   header:  
-     qualtrics cpc pain ema
+     qualtrics cpc pain ema with dict and fitbit
 
   # useful for testing on a single case
   #cases_ignore: [ EMS011, EMS013, EMS022, all_cases ]
@@ -20,7 +20,7 @@ GLOBAL:
     output: output_gfci
 
 PREP:
-  datafile: CPC+EMA+Survey_September+9,+2025_09.25_df.csv
+  datafile: proj_cpcfb/CPC+EMA+Survey_September+9,+2025_09.25_df.csv
 
   variables:
     # minimum number of raw rows
@@ -145,25 +145,23 @@ PREP:
   # step for individual case
   steps_case:
 
-    # recoredDate in qualtrics 2023-09-10T18:09:44.303Z
+    # RecordedDate in qualtrics 2024-08-21 21:06:38
     # Get the datetime stored for a case
     # This is stored as a list which is used to match
-    # corresponding data in the stream.json.gz file.
+    # corresponding data in the stream.json.gz file or fitbit.json file
     # for redcap 2022-02-11 09:19:37
     # if no dateformat is provided, dateutil.parser.parse is
     # used to automatically do the conversion
-    # If no timezone is provided, UTC is assumed. This is good for
-    # Qualitrics which uses UTC for datetime fields.
-    # -
-    #   op: getdatetime
-    #   arg:
-    #     # name for datetime column in data
-    #     datetime: datetime
-    #     # timezone ema data, for redcap America/Chicago
-    #     # for qualtrics Etc/UTC
-    #     #timezone: America/Chicago
-    #     #dateformat: '%Y-%m-%dT%H:%M:%S.%fZ'
-    #     #dateformat: '%Y-%m-%dT%H:%M:%SZ'
+    # If no timezone is provided, UTC is assumed??? 
+    -
+      op: getdatetime
+      arg:
+        # name for datetime column in data
+        datetime: datetime
+        # timezone ema data, for redcap America/Chicago
+        #timezone: America/Chicago
+        #dateformat: '%Y-%m-%dT%H:%M:%S.%fZ'
+        #dateformat: '%Y-%m-%dT%H:%M:%SZ'
         
     # # merge garmin data
     # -
@@ -175,12 +173,42 @@ PREP:
     #     stub: _stream.json.gz
     #     clean: True
 
+    # merge fitbit data
+    -
+      op: mergefitbit
+      arg:
+        # stub for the fitbit order-date json file.
+        # Sample file: sub-R34B14_id-316_end-20250507_start-20241122_order-date.json
+        # fitbitdir: /Users/kolim/BoxDrive/FitbitData/R34HAPPINESS
+        # stub: sub-{label}_*order-date.json
+        # clean: True
+        fitbitdir: /Users/kolim/BoxDrive/FitbitData/VAPain
+        stub: sub-{label}_*order-date.json
+
+
+    # save intermediate result after adding the wearable data
+    -
+      op: save
+      arg: 
+        dir: data_raw
+        stub: _wearable.csv
+
+
     -
       op: drop
       arg:
         - id
         - datetime
-
+        #- fb_deepRmssd
+        # - fb_minutesAwake
+        - fb_fatBurnActiveZoneMinutes
+        # - fb_minutesToFallAsleep
+        #- fb_dailyRmssd
+        #- fb_activeZoneMinutes
+        #- fb_timeInBed
+        #- fb_minutesAsleep
+        #- fb_efficiency
+        - fb_cardioActiveZoneMinutes
 
     # -
     #   op: rename
@@ -219,13 +247,11 @@ PREP:
       arg: 
         dir: data
         stub: .csv 
-        min_rows: 60
+        min_rows: 50
 
 CAUSAL:
-
   # standardize the columns
   standardize_cols: true
-
   # jitter
   jitter: .001
 
@@ -351,20 +377,35 @@ GRAPHS:
       stub: _fullancest.png
       dir: output
 
-  # -
-  #   op: parentchild
-  #   arg: 
-  #     parent: [QN06_activity]
-  #     child: [QN01_intensity_NP]
-  #     colors: 
-  #       pos: green
-  #       neg: red
+  -
+    op: parentchild
+    arg: 
+      parent: [
+                fb_minutesAwake,
+                fb_minutesAwake_,
+                fb_minutesToFallAsleep,
+                fb_minutesToFallAsleep_,
+                fb_minutesAsleep,
+                fb_minutesAsleep_,
+                fb_efficiency,
+                fb_efficiency_,
+                fb_timeInBed,
+                fb_timeInBed_,
+                fb_dailyRmssd,
+                fb_dailyRmssd_,
+                fb_deepRmssd,
+                fb_deepRmssd_,
+        ]
+      child: [ pain_interf, pain_interf_ ]
+      colors: 
+        pos: green
+        neg: red
 
-  # -
-  #   op: save_plot
-  #   arg: 
-  #     stub: _activity.png
-  #     dir: output
+  -
+    op: save_plot
+    arg: 
+      stub: _fitbit.png
+      dir: output
 
 
   # -
@@ -389,163 +430,97 @@ GRAPHS:
 PATHS:
 
   effectsize:
-    -
-      des: pain_interf
+    pain_interf: # the des
       title: 'Causal Effect Sizes on Pain Interference'
       grid: 
         plot: True
-        plotname: pain_interf
-        titleSize: 20
-        labelsize: 8
-        gridlines: True
-        minrsq: 0.05
-        xrotate: 45
-        widthInches: 20.0
-        heightInches: 12.0
-        xLabelSize: 12
-        yLabelSize: 12
-        reorderCases: False
-        reorderCasesUseList: False
-        reorderColumns: False       
-      # src 
-      src:  [
-              #pain_interf,
-              pain_interf_,
-              pain_intens,
-              pain_intens_, 
-              pain_mind,
-              pain_mind_,
-              pain_cope,
-              pain_cope_,
-              pain_worry,
-              pain_worry_,
-              pain_strategy,
-              pain_strategy_,
-
-              fatigue,
-              fatigue_,
-              accomplish,
-              accomplish_,
-              serious,
-              serious_,
-
-              stressed,
-              stressed_,
-              depressed,
-              depressed_,
-              rested,
-              rested_,
-
-              feel_support,
-              feel_support_,
-              feel_direction,
-              feel_direction_,
-              feel_burden,
-              feel_burden_,
-
-              trust_provid,
-              trust_provid_,
-
-              get_better,
-              get_better_,
-              # cognition
-              SpatialSpan3_perc_accuracy,
-              SpatialSpan3_perc_accuracy_,
-              SpatialSpan4_perc_accuracy,
-              SpatialSpan4_perc_accuracy_,
-              SpatialSpan5_perc_accuracy,
-              SpatialSpan5_perc_accuracy_,
-              GridA_secs,
-              GridA_secs_,
-              GridB_secs,
-              GridB_secs_,
-            ]
-
-    -
-      des: pain_interf
-      title: 'Causal Effect Sizes on Pain Interference'
-      grid: 
-        plot: True
-        plotname: pain_interf_reord_cases
-        titleSize: 20
-        labelsize: 8
-        gridlines: True
-        minrsq: 0.05
-        xrotate: 45
-        widthInches: 20.0
-        heightInches: 12.0
-        xLabelSize: 12
-        yLabelSize: 12
-        reorderCases: True
-        reorderCasesUseList: False
-        reorderColumns: False       
-      # src 
-      src:  [
-              #pain_interf,
-              pain_interf_,
-              pain_intens,
-              pain_intens_, 
-              pain_mind,
-              pain_mind_,
-              pain_cope,
-              pain_cope_,
-              pain_worry,
-              pain_worry_,
-              pain_strategy,
-              pain_strategy_,
-
-              fatigue,
-              fatigue_,
-              accomplish,
-              accomplish_,
-              serious,
-              serious_,
-
-              stressed,
-              stressed_,
-              depressed,
-              depressed_,
-              rested,
-              rested_,
-
-              feel_support,
-              feel_support_,
-              feel_direction,
-              feel_direction_,
-              feel_burden,
-              feel_burden_,
-
-              trust_provid,
-              trust_provid_,
-
-              get_better,
-              get_better_,
-              # cognition
-              SpatialSpan3_perc_accuracy,
-              SpatialSpan3_perc_accuracy_,
-              SpatialSpan4_perc_accuracy,
-              SpatialSpan4_perc_accuracy_,
-              SpatialSpan5_perc_accuracy,
-              SpatialSpan5_perc_accuracy_,
-              GridA_secs,
-              GridA_secs_,
-              GridB_secs,
-              GridB_secs_,
-            ]
-
-    -
-      des: pain_intens
-      title: 'Causal Effect Sizes on Pain Intensity'
-      grid: 
-        plot: True
-        plotname: pain_intens
         titleSize: 20
         labelsize: 10
         gridlines: True
         minrsq: 0.05
         xrotate: 45
-        widthInches: 20.0
-        heightInches: 12.0
+        widthInches: 14.0
+        heightInches: 6.0
+        xLabelSize: 16
+        yLabelSize: 16
+        reorderCases: False
+        reorderCasesUseList: False
+        reorderColumns: False       
+      # src 
+      src:  [
+              fatigue,
+              fatigue_,
+              accomplish,
+              accomplish_,
+              #pain_interf,
+              pain_interf_,
+              pain_cope,
+              pain_cope_,
+              pain_worry,
+              pain_worry_,
+              serious,
+              serious_,
+              pain_mind,
+              pain_mind_,
+              pain_intens,
+              pain_intens_,
+              stressed,
+              stressed_,
+              depressed,
+              depressed_,
+              rested,
+              rested_,
+              pain_strategy,
+              pain_strategy_,
+              feel_support,
+              feel_support_,
+              feel_direction,
+              feel_direction_,
+              feel_burden,
+              feel_burden_,
+              trust_provid,
+              trust_provid_,
+              get_better,
+              get_better_,
+              SpatialSpan3_perc_accuracy,
+              SpatialSpan3_perc_accuracy_,
+              SpatialSpan4_perc_accuracy,
+              SpatialSpan4_perc_accuracy_,
+              SpatialSpan5_perc_accuracy,
+              SpatialSpan5_perc_accuracy_,
+              GridA_secs,
+              GridA_secs_,
+              GridB_secs,
+              GridB_secs_,
+              fb_minutesAwake,
+              fb_minutesAwake_,
+              fb_minutesToFallAsleep,
+              fb_minutesToFallAsleep_,
+              fb_minutesAsleep,
+              fb_minutesAsleep_,
+              fb_efficiency,
+              fb_efficiency_,
+              fb_timeInBed,
+              fb_timeInBed_,
+              fb_dailyRmssd,
+              fb_dailyRmssd_,
+              fb_deepRmssd,
+              fb_deepRmssd_,
+              fb_activeZoneMinutes,
+              fb_activeZoneMinutes_
+            ]
+
+    pain_intens: # the des
+      title: 'Causal Effect Sizes on Pain Intensity'
+      grid: 
+        plot: True
+        titleSize: 20
+        labelsize: 10
+        gridlines: True
+        minrsq: 0.05
+        xrotate: 45
+        widthInches: 16.0
+        heightInches: 8.0
         xLabelSize: 12
         yLabelSize: 12
         reorderCases: False
@@ -597,4 +572,20 @@ PATHS:
               GridA_secs_,
               GridB_secs,
               GridB_secs_,
+              fb_minutesAwake,
+              fb_minutesAwake_,
+              fb_minutesToFallAsleep,
+              fb_minutesToFallAsleep_,
+              fb_minutesAsleep,
+              fb_minutesAsleep_,
+              fb_efficiency,
+              fb_efficiency_,
+              fb_timeInBed,
+              fb_timeInBed_,
+              fb_dailyRmssd,
+              fb_dailyRmssd_,
+              fb_deepRmssd,
+              fb_deepRmssd_,
+              fb_activeZoneMinutes,
+              fb_activeZoneMinutes_
             ]

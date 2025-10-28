@@ -250,6 +250,10 @@ PREP:
         min_rows: 60
 
 CAUSAL:
+  # standardize the columns
+  standardize_cols: true
+  # jitter
+  jitter: .001
 
   # set env and path
   SETTINGS:
@@ -319,8 +323,6 @@ CAUSAL:
     version: 1.1.3
     cmdpath: /home/limko/public/causal
 
-  # standardize the columns
-  standardize_cols: true
 
 SEM:
   plotting:
@@ -349,7 +351,7 @@ GRAPHS:
     op: ancestors
     arg: 
       nodes: [pain_interf]
-      minrsq: 0.01
+      minrsq: 0.05
       colors: 
         pos: green
         neg: red
@@ -375,20 +377,35 @@ GRAPHS:
       stub: _fullancest.png
       dir: output
 
-  # -
-  #   op: parentchild
-  #   arg: 
-  #     parent: [QN06_activity]
-  #     child: [QN01_intensity_NP]
-  #     colors: 
-  #       pos: green
-  #       neg: red
+  -
+    op: parentchild
+    arg: 
+      parent: [
+                fb_minutesAwake,
+                fb_minutesAwake_,
+                fb_minutesToFallAsleep,
+                fb_minutesToFallAsleep_,
+                fb_minutesAsleep,
+                fb_minutesAsleep_,
+                fb_efficiency,
+                fb_efficiency_,
+                fb_timeInBed,
+                fb_timeInBed_,
+                fb_dailyRmssd,
+                fb_dailyRmssd_,
+                fb_deepRmssd,
+                fb_deepRmssd_,
+        ]
+      child: [ pain_interf, pain_interf_ ]
+      colors: 
+        pos: green
+        neg: red
 
-  # -
-  #   op: save_plot
-  #   arg: 
-  #     stub: _activity.png
-  #     dir: output
+  -
+    op: save_plot
+    arg: 
+      stub: _fitbit.png
+      dir: output
 
 
   # -
@@ -420,12 +437,12 @@ PATHS:
         titleSize: 20
         labelsize: 10
         gridlines: True
-        minrsq: 0.01
+        minrsq: 0.05
         xrotate: 45
-        widthInches: 20.0
-        heightInches: 14.0
-        xLabelSize: 12
-        yLabelSize: 12
+        widthInches: 14.0
+        heightInches: 6.0
+        xLabelSize: 16
+        yLabelSize: 16
         reorderCases: False
         reorderCasesUseList: False
         reorderColumns: False       
@@ -498,7 +515,7 @@ PATHS:
         titleSize: 20
         labelsize: 10
         gridlines: True
-        minrsq: 0.01
+        minrsq: 0.05
         xrotate: 45
         widthInches: 16.0
         heightInches: 8.0
