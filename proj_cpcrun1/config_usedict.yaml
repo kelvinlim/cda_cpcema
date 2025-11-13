@@ -20,7 +20,7 @@ GLOBAL:
     output: output_gfci
 
 PREP:
-  datafile: CPC+EMA+Survey_August+26,+2025_16.32_df.csv
+  datafile: CPC+EMA+Survey_September+9,+2025_09.25_df.csv
 
   variables:
     # minimum number of raw rows
@@ -38,7 +38,7 @@ PREP:
       # - Progress
       # - Duration (in seconds)
       # - Finished
-      # - RecordedDate
+      - RecordedDate
       # - ResponseId
       # - RecipientLastName
       # - RecipientFirstName
@@ -92,7 +92,7 @@ PREP:
         Progress: Progress
         Duration (in seconds): Duration (in seconds)
         Finished: Finished
-        RecordedDate: Recorded Date
+        RecordedDate: datetime
         ResponseId: Response ID
         RecipientLastName: Recipient Last Name
         RecipientFirstName: Recipient First Name
@@ -130,11 +130,11 @@ PREP:
         TrailsAB: TrailsAB
 
 
-    # - 
-    #   op: sort
-    #   arg:
-    #     - id
-    #     - datetime
+    - 
+      op: sort
+      arg:
+        - id
+        - datetime
 
     -
       op: save
@@ -179,6 +179,7 @@ PREP:
       op: drop
       arg:
         - id
+        - datetime
 
     # -
     #   op: rename
