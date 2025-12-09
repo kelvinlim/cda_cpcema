@@ -199,16 +199,16 @@ PREP:
       op: missing_value
       arg: drop        
 
-    -
-      op: add_lag
-      arg:
-        suffix: _
+    # -
+    #   op: add_lag
+    #   arg:
+    #     suffix: _
 
-    -
-      op: save
-      arg: 
-        dir: data_raw
-        stub: _lagged.csv
+    # -
+    #   op: save
+    #   arg: 
+    #     dir: data_raw
+    #     stub: _lagged.csv
     
     -
       op: standardize
@@ -267,7 +267,7 @@ CAUSAL:
     data-type: continuous
     delimiter: comma
     json-graph: False
-    knowledge: prior.txt
+    knowledge: 
     out: output_gfci
     penaltyDiscount: 1.0
     prefix:
